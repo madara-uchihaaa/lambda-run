@@ -3,17 +3,29 @@
    "displayName": "lambda-run",
    "description": "Run AWS Lambda functions locally",
    "version": "0.0.1",
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/madara-uchihaaa/lambda-run"
+   },
    "engines": {
       "vscode": "^1.93.0"
    },
    "categories": [
-      "Other"
+      "Programming Languages",
+      "Snippets"
    ],
    "icon": "images/images.png",
    "activationEvents": [
       "onLanguage:yaml",
       "onCommand:extension.runFunction"
    ],
+   "keywords": [
+      "lambda",
+      "aws",
+      "run",
+      "local"
+   ],
+   "markdown": "github",
    "publisher": "rishabhDMonkey2412",
    "pricing": "Free",
    "main": "./dist/extension.js",
