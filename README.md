@@ -1,4 +1,4 @@
-# Serverless Lambda Runner - VSCode Extension
+# Lambda Runner - VSCode Extension
 
 This VSCode extension provides a simple way to invoke AWS Lambda functions defined in both `template.yaml` (SAM) and `serverless.yml` (Serverless Framework) files directly from the editor. The extension adds CodeLens options to invoke local Lambda functions with pre-configured test files, environment variables, and runtime parameters.
 
