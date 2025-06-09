@@ -1,8 +1,8 @@
 {
    "name": "lambda-run",
    "displayName": "lambda-run",
-   "description": "Run AWS Lambda functions locally",
-   "version": "0.0.2",
+   "description": "Run AWS Lambda functions locally with smart preferences and flexible test data management",
+   "version": "1.0.0",
    "repository": {
       "type": "git",
       "url": "https://github.com/madara-uchihaaa/lambda-run"
@@ -12,18 +12,22 @@
    },
    "categories": [
       "Programming Languages",
-      "Snippets"
+      "Snippets",
+      "Testing"
    ],
    "icon": "images/images.png",
    "activationEvents": [
-      "onLanguage:yaml",
-      "onCommand:extension.runFunction"
+      "onLanguage:yaml"
    ],
    "keywords": [
       "lambda",
       "aws",
       "run",
-      "local"
+      "local",
+      "serverless",
+      "sam",
+      "testing",
+      "local-development"
    ],
    "markdown": "github",
    "publisher": "rishabhDMonkey2412",
@@ -32,10 +36,219 @@
    "contributes": {
       "commands": [
          {
-            "command": "lambda-run.helloWorld",
-            "title": "Hello World"
+            "command": "extension.runFunction",
+            "title": "Run Lambda Function",
+            "category": "Lambda Run"
+         },
+         {
+            "command": "extension.runFunctionWithLastSettings",
+            "title": "Run Function with Last Settings",
+            "category": "Lambda Run"
+         },
+         {
+            "command": "extension.configureTestDataLocations",
+            "title": "Configure Test Data Locations",
+            "category": "Lambda Run"
+         },
+         {
+            "command": "extension.showExecutionHistory",
+            "title": "Show Execution History",
+            "category": "Lambda Run"
          }
-      ]
+      ],
+      "keybindings": [
+         {
+            "command": "extension.runFunctionWithLastSettings",
+            "key": "ctrl+shift+r",
+            "mac": "cmd+shift+r",
+            "when": "editorTextFocus && resourceExtname == .yaml"
+         },
+         {
+            "command": "extension.showExecutionHistory",
+            "key": "ctrl+shift+h",
+            "mac": "cmd+shift+h",
+            "when": "workspaceFolderCount > 0"
+         }
+      ],
+      "menus": {
+         "commandPalette": [
+            {
+               "command": "extension.configureTestDataLocations",
+               "when": "workspaceFolderCount > 0"
+            },
+            {
+               "command": "extension.showExecutionHistory",
+               "when": "workspaceFolderCount > 0"
+            }
+         ],
+         "explorer/context": [
+            {
+               "command": "extension.configureTestDataLocations",
+               "when": "explorerResourceIsFolder",
+               "group": "lambda-run@1"
+            }
+         ],
+         "editor/context": [
+            {
+               "command": "extension.runFunctionWithLastSettings",
+               "when": "resourceExtname == .yaml",
+               "group": "lambda-run@1"
+            }
+         ]
+      },
+      "configuration": {
+         "title": "Lambda Run",
+         "properties": {
+            "lambdaRun.testDataLocations": {
+               "type": "array",
+               "items": {
+                  "type": "string"
+               },
+               "default": [],
+               "description": "List of relative paths where test data files are located. If empty, searches entire workspace.",
+               "examples": [
+                  [
+                     "test-data",
+                     "tests/fixtures",
+                     "lambda-tests"
+                  ]
+               ]
+            },
+            "lambdaRun.testFilePatterns": {
+               "type": "array",
+               "items": {
+                  "type": "string"
+               },
+               "default": [
+                  "**/*.json"
+               ],
+               "description": "File patterns to match test files",
+               "examples": [
+                  [
+                     "**/*.json",
+                     "**/*-test.json",
+                     "**/test-*.json"
+                  ]
+               ]
+            },
+            "lambdaRun.environments": {
+               "type": "array",
+               "items": {
+                  "type": "string"
+               },
+               "default": [
+                  "PreProd",
+                  "Prod"
+               ],
+               "description": "List of available environments/stages",
+               "examples": [
+                  [
+                     "PreProd",
+                     "Prod"
+                  ]
+               ]
+            },
+            "lambdaRun.regions": {
+               "type": "array",
+               "items": {
+                  "type": "string"
+               },
+               "default": [
+                  "ap-south-1",
+                  "ap-south-2",
+                  "us-east-1",
+                  "us-west-2",
+                  "eu-west-1",
+                  "ap-southeast-1"
+               ],
+               "description": "List of available AWS regions",
+               "examples": [
+                  [
+                     "ap-south-1",
+                     "ap-south-2",
+                     "us-east-1",
+                     "us-west-2",
+                     "eu-west-1",
+                     "ap-southeast-1"
+                  ]
+               ]
+            },
+            "lambdaRun.defaultEnvironment": {
+               "type": "string",
+               "description": "Default environment to pre-select",
+               "enum": [
+                  "PreProd",
+                  "Prod"
+               ]
+            },
+            "lambdaRun.defaultRegion": {
+               "type": "string",
+               "default": "ap-south-1",
+               "description": "Default region to pre-select",
+               "enum": [
+                  "ap-south-1",
+                  "ap-south-2",
+                  "us-east-1",
+                  "us-west-2",
+                  "eu-west-1",
+                  "ap-southeast-1"
+               ]
+            },
+            "lambdaRun.autoCreateTestData": {
+               "type": "boolean",
+               "default": true,
+               "description": "Automatically create test-data folder if it doesn't exist"
+            },
+            "lambdaRun.showRelativePaths": {
+               "type": "boolean",
+               "default": true,
+               "description": "Show relative paths in test file picker for better context"
+            },
+            "lambdaRun.rememberPreferences": {
+               "type": "boolean",
+               "default": true,
+               "description": "Remember last used test file, environment, and region for each function"
+            },
+            "lambdaRun.reuseTerminals": {
+               "type": "boolean",
+               "default": true,
+               "description": "Reuse existing terminals instead of creating new ones for each execution"
+            },
+            "lambdaRun.showExecutionTime": {
+               "type": "boolean",
+               "default": true,
+               "description": "Show execution time in status bar after function runs"
+            },
+            "lambdaRun.maxExecutionHistory": {
+               "type": "number",
+               "default": 50,
+               "minimum": 10,
+               "maximum": 200,
+               "description": "Maximum number of execution records to keep in history"
+            },
+            "lambdaRun.functionSpecificTestPriority": {
+               "type": "boolean",
+               "default": true,
+               "description": "Prioritize test files that contain the function name when showing test file options"
+            },
+            "lambdaRun.autoShowTerminal": {
+               "type": "boolean",
+               "default": true,
+               "description": "Automatically show terminal when running functions"
+            },
+            "lambdaRun.notificationLevel": {
+               "type": "string",
+               "default": "info",
+               "enum": [
+                  "none",
+                  "error",
+                  "info",
+                  "verbose"
+               ],
+               "description": "Level of notifications to show during function execution"
+            }
+         }
+      }
    },
    "scripts": {
       "vscode:prepublish": "npm run package",
