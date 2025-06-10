@@ -1,128 +1,447 @@
-# Lambda Runner - VSCode Extension
+# 🚀 Lambda Run
 
-This VSCode extension provides a simple way to invoke AWS Lambda functions defined in both `template.yaml` (SAM) and `serverless.yml` (Serverless Framework) files directly from the editor. The extension adds CodeLens options to invoke local Lambda functions with pre-configured test files, environment variables, and runtime parameters.
+> **Run AWS Lambda functions locally with smart preferences and flexible test data management**
 
-## Features
+[![VS Code Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-blue?style=for-the-badge&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=rishabhDMonkey2412.lambda-run)
+[![Version](https://img.shields.io/badge/version-1.0.0-green?style=for-the-badge)](https://github.com/madara-uchihaaa/lambda-run)
+[![License](https://img.shields.io/badge/license-MIT-orange?style=for-the-badge)](LICENSE)
 
-- **Automatic Function Detection:** 
-  - The extension detects AWS Lambda functions defined in either `template.yaml` or `serverless.yml`.
-  - For each detected function, a **CodeLens** ("Run This Function") is displayed above the function definition.
-  
-- **Dynamic Test File Selection:** 
-  - The extension looks for test files (JSON format) in a `test-data` folder in the root of the workspace.
-  - Users are prompted to select a test file to simulate an event for the Lambda function.
+Transform your AWS Lambda development workflow with **Lambda Run** - the VS Code extension that makes local testing effortless, intelligent, and lightning-fast.
 
-- **Environment Selection:**
-  - Users can choose between different environments (e.g., `Preprod` or `Prod`).
-  
-- **Region Input:**
-  - The extension prompts users to input the AWS region where the function will be invoked. Default region is set to `ap-south-1`.
+---
 
-- **Environment Variables Management:**
-  - The extension looks for `env.json` and `envProd.json` files in the workspace for configuring environment-specific variables during invocation.
+## ✨ Features at a Glance
 
-- **SAM and Serverless Framework Support:**
-  - Supports both the AWS SAM CLI (`sam local invoke`) and the Serverless Framework (`serverless invoke local`) for local function invocations.
-  
-- **Command Execution in Terminal:**
-  - All commands are executed in a new VSCode terminal, allowing users to see the output of the Lambda function execution in real-time.
+### 🎯 **One-Click Execution**
+Execute Lambda functions directly from your YAML files with intuitive CodeLens buttons
 
-## How It Works
+### 🧠 **Smart Memory**
+Remembers your preferences per function - test files, environments, and regions
 
-1. **Detecting Functions:**
-   - The extension uses regular expressions to detect functions in `template.yaml` and `serverless.yml`.
+### 🔄 **Dual Framework Support**
+Works seamlessly with both **SAM** and **Serverless Framework**
 
-     - **For SAM (`template.yaml`) files:**
-       - Functions are identified by the `Type: AWS::Serverless::Function` and their associated handler.
-       - **Regex:** `(\w+):\s*Type:\s*AWS::Serverless::Function\s*Properties:\s*Handler:\s*([^\s]+)`
-         - This captures two groups:
-           1. The function name (first capture group: `(\w+)`).
-           2. The handler (second capture group: `([^\s]+)`).
+### 📁 **Flexible Test Management**
+Intelligent test file discovery with customizable search patterns
 
-       - **Example Function Definition:**
-         ```yaml
-         MyFunction:
-           Type: AWS::Serverless::Function
-           Properties:
-             Handler: index.handler
-             ...
-         ```
+### 📊 **Execution Tracking**
+Complete history of your function runs with detailed statistics
 
-     - **For Serverless (`serverless.yml`) files:**
-       - Functions are identified by the `functions` key and the corresponding handler.
-       - **Regex:** `(\w+):\s*handler:\s*([^\s]+)`
-         - This captures two groups:
-           1. The function name (first capture group: `(\w+)`).
-           2. The handler (second capture group: `([^\s]+)`).
+---
 
-       - **Example Function Definition:**
-         ```yaml
-         functions:
-           myFunction:
-             handler: index.handler
-             ...
-         ```
+## 🚀 Getting Started
 
-   - For each detected function, the extension checks if the handler is defined. If the handler is valid, a **CodeLens** with the option to "Run This Function" is displayed above the function definition.
+### Prerequisites
 
-2. **CodeLens Options:**
-   - After detecting a function, the extension adds a **CodeLens** above the function, showing:
-     - "Run This Function" if the function has a valid handler.
-     - "Handler Not Defined" if the handler is missing or undefined.
-   
-3. **Running Functions:**
-   - When you click the **CodeLens** to run a function:
-     1. **Test File Selection:** You are prompted to select a test file from the `test-data` folder (only `.json` files are displayed).
-     2. **Environment Selection:** You are prompted to choose the environment (`Preprod` or `Prod`).
-     3. **Region Input:** You are asked to enter the AWS region (default is `ap-south-1`).
-     4. **Environment Variables:** Depending on the selected environment, the extension looks for `env.json` or `envProd.json` files in the workspace.
-     5. **Command Execution:** The selected SAM/Serverless function is executed with the selected test file, environment, and region via the terminal.
+- **VS Code** 1.93.0 or higher
+- **AWS SAM CLI** (for SAM projects) or **Serverless Framework** (for Serverless projects)
+- **Node.js** for your Lambda functions
 
-## Assumptions
+### Installation
 
-- **Test Files:** 
-  - The extension assumes that all test files are in JSON format and are located in the `test-data` folder at the root of the workspace.
-  - If the folder does not exist, the extension will create it automatically and ask you to add test files.
-  
-- **Environment Variables Files:**
-  - The extension expects `env.json` for Preprod and `envProd.json` for Prod, located at the root of the workspace. If these files do not exist, it will fall back to `env.json`.
+1. Open VS Code
+2. Go to Extensions (`Ctrl+Shift+X`)
+3. Search for "Lambda Run"
+4. Click **Install**
 
-## When Do Options Appear?
+### First Run
 
-- **Run This Function (CodeLens):**
-  - This option appears above any function definition in `template.yaml` or `serverless.yml`.
-  - The option only appears if the function has a valid handler defined.
+1. Open a workspace with `template.yaml` (SAM) or `serverless.yml` (Serverless)
+2. Look for the **🚀 Run Function** buttons above your function definitions
+3. Click to execute - the extension will guide you through the setup!
 
-- **Test File Selection:**
-  - This option appears once you initiate the function invocation. It will list all `.json` test files from the `test-data` folder for you to choose from.
+---
 
-- **Environment Selection:**
-  - After selecting a test file, you will be prompted to choose the environment (`Preprod` or `Prod`).
+## 🎨 Core Features
 
-- **Region Input:**
-  - After selecting the environment, you will be prompted to enter the AWS region for the Lambda function execution.
+### 📋 **CodeLens Integration**
 
-## Prerequisites
+Smart buttons appear directly in your YAML files:
 
-- **AWS SAM CLI** if you are using SAM templates (`template.yaml`).
-- **Serverless Framework CLI** if you are using Serverless Framework (`serverless.yml`).
-- A `test-data` folder with test event JSON files.
-- Optional: `env.json` and `envProd.json` for environment-specific variables.
+```yaml
+functions:
+  getUserData:                    # 🚀 Run Function | ⚡ Run (Last Settings)
+    handler: src/handlers/user.getUserData
+    events:
+      - http:
+          path: /user/{id}
+          method: get
+```
 
-## Installation
+- **🚀 Run Function** - Execute with full configuration options
+- **⚡ Run (Last Settings)** - Instant re-run with previously used settings
 
-1. Clone or download the extension.
-2. Open the folder in VSCode.
-3. Run the extension in a development environment using `F5` in VSCode.
+### 🧠 **Intelligent Preferences**
 
-## Usage
+Lambda Run learns and adapts to your workflow:
 
-1. Open a workspace that includes a `template.yaml` or `serverless.yml` file.
-2. Add a `test-data` folder at the root of the workspace and add JSON files representing the test events.
-3. Open any `template.yaml` or `serverless.yml` file.
-4. A **CodeLens** will appear above the Lambda function declarations with the option to "Run This Function".
-5. Click the CodeLens to initiate the function invocation process.
+- **Per-Function Memory**: Remembers test files, environments, and regions for each function
+- **Smart Defaults**: Pre-selects your most-used configurations
+- **Auto-Cleanup**: Removes invalid preferences when files or configs change
 
-## Contributing
+### 🔍 **Smart Test File Discovery**
 
-Feel free to submit issues and pull requests for new features or bug fixes.
+Multiple discovery strategies for maximum flexibility:
+
+```
+📁 my-lambda-project/
+├── 📁 test-data/
+│   ├── user-create.json     ← Prioritized for 'createUser' function
+│   ├── user-update.json     ← Prioritized for 'updateUser' function
+│   └── general-test.json
+├── 📁 tests/fixtures/
+│   └── integration-tests.json
+└── 📁 custom-location/
+    └── specific-test.json
+```
+
+**Configuration Options:**
+- **Specific Folders**: Configure exact locations for test files
+- **Pattern Matching**: Use glob patterns (`**/*.json`, `**/test-*.json`)
+- **Function Priority**: Automatically prioritize test files containing function names
+- **Workspace Search**: Fall back to searching entire workspace
+
+### 🌍 **Environment & Region Management**
+
+Flexible configuration management:
+
+**Environments:**
+```
+Development → PreProd → Prod
+```
+
+**AWS Regions:**
+```
+ap-south-1 (Primary)
+us-east-1 (Backup)
+eu-west-1 (Global)
+```
+
+- Add/remove environments and regions through UI
+- Validation prevents empty configurations
+- Auto-cleanup of invalid defaults
+
+### 📊 **Execution History & Analytics**
+
+Complete visibility into your development workflow:
+
+```
+📈 Execution Statistics:
+├── Total Runs: 47
+├── Success Rate: 94%
+├── Average Duration: 2.3s
+└── Most Used: getUserData (12 runs)
+
+📋 Recent History:
+├── ✅ getUserData (PreProd, ap-south-1) - 2.1s
+├── ✅ createUser (Prod, us-east-1) - 1.8s
+├── ❌ updateUser (PreProd, ap-south-1) - Failed
+└── ✅ deleteUser (PreProd, ap-south-1) - 2.5s
+```
+
+**Features:**
+- **Detailed Logging**: Track every execution with timestamps and duration
+- **Re-run from History**: Click any history item to execute again
+- **Success Tracking**: Monitor which functions are working reliably
+- **Export Capabilities**: Copy statistics for reporting
+
+---
+
+## 🎛️ Configuration
+
+### Command Palette Actions
+
+Access all features via `Ctrl+Shift+P`:
+
+- **Lambda Run: Configure Environments** - Manage deployment stages
+- **Lambda Run: Configure Regions** - Manage AWS regions
+- **Lambda Run: Configure Test Data Locations** - Set up test file directories
+- **Lambda Run: Show Execution History** - View and re-run previous executions
+- **Lambda Run: Manage Extension Data** - Statistics and data management
+- **Lambda Run: Reset Extension to Defaults** - Clean slate reset
+
+### ⌨️ Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+Shift+R` | Run function with last settings |
+| `Ctrl+Shift+H` | Show execution history |
+
+*Mac users: Replace `Ctrl` with `Cmd`*
+
+### ⚙️ Settings
+
+Fine-tune Lambda Run through VS Code Settings (`Ctrl+,`):
+
+```json
+{
+  "lambdaRun.environments": ["Dev", "Staging", "Prod"],
+  "lambdaRun.regions": ["us-east-1", "eu-west-1"],
+  "lambdaRun.testDataLocations": ["test-data", "tests/fixtures"],
+  "lambdaRun.rememberPreferences": true,
+  "lambdaRun.functionSpecificTestPriority": true,
+  "lambdaRun.maxExecutionHistory": 50,
+  "lambdaRun.notificationLevel": "info"
+}
+```
+
+**Key Settings:**
+- `testDataLocations` - Folders to search for test files
+- `testFilePatterns` - File patterns to match (e.g., `**/*.json`)
+- `rememberPreferences` - Save last-used settings per function
+- `reuseTerminals` - Reuse terminals vs create new ones
+- `autoShowTerminal` - Automatically show terminal during execution
+
+---
+
+## 🔧 Advanced Usage
+
+### Custom Test File Patterns
+
+Configure specific patterns for your test files:
+
+```json
+{
+  "lambdaRun.testFilePatterns": [
+    "**/*-test.json",        // Standard test files
+    "**/fixtures/*.json",    // Fixture files
+    "**/samples/**.json"     // Sample data
+  ]
+}
+```
+
+### Environment-Specific Variables
+
+Lambda Run automatically detects and uses environment files:
+
+```
+📁 your-project/
+├── env.json          ← Used for PreProd environment
+├── envProd.json      ← Used for Prod environment
+└── template.yaml
+```
+
+### Terminal Management
+
+Control how terminals are handled:
+
+- **Reuse Terminals**: One terminal per function (efficient)
+- **New Terminals**: Fresh terminal for each execution (isolated)
+- **Auto-Show**: Automatically bring terminal to focus
+
+---
+
+## 🏗️ Framework Support
+
+### SAM (Serverless Application Model)
+
+**File Structure:**
+```yaml
+# template.yaml
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  GetUserFunction:              # 🚀 Run Function
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/user.getUser
+      Runtime: nodejs18.x
+```
+
+**Generated Command:**
+```bash
+sam local invoke GetUserFunction \
+  --template-file template.yaml \
+  --event "test-data/user-get.json" \
+  --parameter-overrides Stage=PreProd Mode=Update \
+  --region ap-south-1 \
+  --env-vars env.json
+```
+
+### Serverless Framework
+
+**File Structure:**
+```yaml
+# serverless.yml
+service: my-lambda-service
+
+functions:
+  getUser:                      # 🚀 Run Function
+    handler: src/user.getUser
+    events:
+      - http:
+          path: /user/{id}
+          method: get
+```
+
+**Generated Command:**
+```bash
+serverless invoke local \
+  --function getUser \
+  --path "test-data/user-get.json" \
+  --stage PreProd \
+  --region ap-south-1 \
+  --param 'mode=Update'
+```
+
+---
+
+## 📈 Workflow Examples
+
+### Daily Development Workflow
+
+1. **Morning Setup**: Open your Lambda project
+2. **Quick Testing**: Use ⚡ Run (Last Settings) for rapid iterations
+3. **New Features**: Use 🚀 Run Function to test with different data
+4. **Environment Testing**: Switch between PreProd/Prod environments
+5. **History Review**: Check `Ctrl+Shift+H` for execution patterns
+
+### Team Collaboration
+
+1. **Shared Config**: Commit `.vscode/settings.json` with team preferences
+2. **Test Organization**: Standardize test file locations and patterns
+3. **Environment Sync**: Ensure all team members have same environments configured
+
+### CI/CD Integration
+
+While Lambda Run is for local development, it helps prepare for CI/CD:
+
+1. **Test Validation**: Ensure all test files work locally before CI
+2. **Environment Parity**: Test with same environments used in CI/CD
+3. **Command Generation**: See exact commands that work locally
+
+---
+
+## 🚨 Troubleshooting
+
+### Common Issues
+
+**🔸 "No test files found"**
+- Check `lambdaRun.testDataLocations` settings
+- Verify test files exist in specified locations
+- Try "Configure Test Data Locations" command
+
+**🔸 "Handler not defined"**
+- Ensure your YAML has proper `handler` field
+- Check function syntax matches SAM or Serverless format
+
+**🔸 "Command failed"**
+- Verify SAM CLI or Serverless Framework is installed
+- Check terminal output for detailed error messages
+- Ensure AWS credentials are configured
+
+### Debug Mode
+
+Enable verbose logging:
+```json
+{
+  "lambdaRun.notificationLevel": "verbose"
+}
+```
+
+View detailed logs in:
+- **Output Panel**: View → Output → "Lambda Run"
+- **Developer Tools**: Help → Toggle Developer Tools → Console
+
+---
+
+## 🎯 Best Practices
+
+### 📁 Project Organization
+
+```
+📁 my-lambda-project/
+├── 📁 src/
+│   ├── handlers/
+│   └── utils/
+├── 📁 test-data/              ← Organized test files
+│   ├── user/
+│   │   ├── create-user.json
+│   │   └── update-user.json
+│   └── auth/
+│       └── login.json
+├── 📁 tests/                  ← Unit tests
+├── env.json                   ← PreProd environment variables
+├── envProd.json              ← Prod environment variables
+├── template.yaml             ← SAM template
+└── serverless.yml           ← Serverless config
+```
+
+### ⚡ Performance Tips
+
+1. **Enable Preference Memory**: Set `rememberPreferences: true`
+2. **Reuse Terminals**: Set `reuseTerminals: true`
+3. **Organize Test Files**: Use function-specific naming
+4. **Limit History**: Set reasonable `maxExecutionHistory`
+
+### 🔒 Security
+
+- **Environment Files**: Add `env*.json` to `.gitignore`
+- **Sensitive Data**: Use AWS Parameter Store for secrets
+- **Local Only**: Lambda Run is for local development - not production
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how to get started:
+
+### Development Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/madara-uchihaaa/lambda-run.git
+
+# Install dependencies
+npm install
+
+# Start development
+npm run watch
+
+# Package extension
+npm run package
+```
+
+### Contribution Guidelines
+
+- 🐛 **Bug Reports**: Use GitHub issues with detailed reproduction steps
+- 💡 **Feature Requests**: Describe use case and expected behavior
+- 🔧 **Pull Requests**: Include tests and update documentation
+- 📝 **Documentation**: Help improve examples and guides
+
+---
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- **AWS SAM Team** - For the excellent local development tools
+- **Serverless Framework** - For revolutionizing serverless development
+- **VS Code Team** - For the amazing extension API
+- **Community** - For feedback and feature suggestions
+
+---
+
+## 📞 Support
+
+Need help? Here are your options:
+
+- 📚 **Documentation**: Check this README and in-editor help
+- 🐛 **Issues**: [GitHub Issues](https://github.com/madara-uchihaaa/lambda-run/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/madara-uchihaaa/lambda-run/discussions)
+- 📧 **Contact**: Create an issue for any questions
+
+---
+
+<div align="center">
+
+**Made with ❤️ for the serverless community**
+
+[⭐ Star on GitHub](https://github.com/madara-uchihaaa/lambda-run) • [📦 VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=rishabhDMonkey2412.lambda-run) • [🐛 Report Bug](https://github.com/madara-uchihaaa/lambda-run/issues)
+
+</div>

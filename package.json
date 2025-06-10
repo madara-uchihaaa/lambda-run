@@ -1,8 +1,8 @@
 {
    "name": "lambda-run",
-   "displayName": "lambda-run",
+   "displayName": "Lambda Run",
    "description": "Run AWS Lambda functions locally with smart preferences and flexible test data management",
-   "version": "1.0.0",
+   "version": "1.0.1",
    "repository": {
       "type": "git",
       "url": "https://github.com/madara-uchihaaa/lambda-run"
@@ -54,6 +54,31 @@
             "command": "extension.showExecutionHistory",
             "title": "Show Execution History",
             "category": "Lambda Run"
+         },
+         {
+            "command": "extension.configureEnvironments",
+            "title": "Configure Environments",
+            "category": "Lambda Run"
+         },
+         {
+            "command": "extension.configureRegions",
+            "title": "Configure Regions",
+            "category": "Lambda Run"
+         },
+         {
+            "command": "extension.clearHistory",
+            "title": "Clear Execution History",
+            "category": "Lambda Run"
+         },
+         {
+            "command": "extension.resetExtensionSettings",
+            "title": "Reset Extension to Defaults",
+            "category": "Lambda Run"
+         },
+         {
+            "command": "extension.manageExtensionData",
+            "title": "Manage Extension Data",
+            "category": "Lambda Run"
          }
       ],
       "keybindings": [
@@ -61,24 +86,23 @@
             "command": "extension.runFunctionWithLastSettings",
             "key": "ctrl+shift+r",
             "mac": "cmd+shift+r",
-            "when": "editorTextFocus && resourceExtname == .yaml"
+            "when": "editorTextFocus && resourceExtname == .yaml || resourceExtname == .yml"
          },
          {
             "command": "extension.showExecutionHistory",
             "key": "ctrl+shift+h",
-            "mac": "cmd+shift+h",
-            "when": "workspaceFolderCount > 0"
+            "mac": "cmd+shift+h"
          }
       ],
       "menus": {
          "commandPalette": [
             {
-               "command": "extension.configureTestDataLocations",
-               "when": "workspaceFolderCount > 0"
+               "command": "extension.runFunction",
+               "when": "false"
             },
             {
-               "command": "extension.showExecutionHistory",
-               "when": "workspaceFolderCount > 0"
+               "command": "extension.runFunctionWithLastSettings",
+               "when": "false"
             }
          ],
          "explorer/context": [
@@ -86,13 +110,23 @@
                "command": "extension.configureTestDataLocations",
                "when": "explorerResourceIsFolder",
                "group": "lambda-run@1"
+            },
+            {
+               "command": "extension.manageExtensionData",
+               "when": "explorerResourceIsFolder",
+               "group": "lambda-run@2"
             }
          ],
          "editor/context": [
             {
                "command": "extension.runFunctionWithLastSettings",
-               "when": "resourceExtname == .yaml",
+               "when": "resourceExtname == .yaml || resourceExtname == .yml",
                "group": "lambda-run@1"
+            },
+            {
+               "command": "extension.manageExtensionData",
+               "when": "resourceExtname == .yaml || resourceExtname == .yml",
+               "group": "lambda-run@2"
             }
          ]
       },
@@ -175,23 +209,16 @@
             },
             "lambdaRun.defaultEnvironment": {
                "type": "string",
-               "description": "Default environment to pre-select",
-               "enum": [
-                  "PreProd",
-                  "Prod"
+               "description": "Default environment to use when running functions",
+               "examples": [
+                  "PreProd"
                ]
             },
             "lambdaRun.defaultRegion": {
                "type": "string",
-               "default": "ap-south-1",
-               "description": "Default region to pre-select",
-               "enum": [
-                  "ap-south-1",
-                  "ap-south-2",
-                  "us-east-1",
-                  "us-west-2",
-                  "eu-west-1",
-                  "ap-southeast-1"
+               "description": "Default region to use when running functions",
+               "examples": [
+                  "ap-south-1"
                ]
             },
             "lambdaRun.autoCreateTestData": {
