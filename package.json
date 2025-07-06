@@ -2,7 +2,7 @@
    "name": "lambda-run",
    "displayName": "Lambda Run",
    "description": "Run AWS Lambda functions locally with smart preferences and flexible test data management",
-   "version": "1.0.1",
+   "version": "1.0.2",
    "repository": {
       "type": "git",
       "url": "https://github.com/madara-uchihaaa/lambda-run"
@@ -15,7 +15,7 @@
       "Snippets",
       "Testing"
    ],
-   "icon": "images/images.png",
+   "icon": "icons/icon.png",
    "activationEvents": [
       "onLanguage:yaml"
    ],
